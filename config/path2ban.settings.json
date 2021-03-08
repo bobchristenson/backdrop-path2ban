@@ -1,0 +1,12 @@
+{
+    "_config_name": "path2ban.settings",
+    "path2ban_list": "",
+    "path2ban_threshold_limit": 5,
+    "path2ban_threshold_window": 3600,
+    "path2ban_notify": 0,
+    "path2ban_warn_user": 0,
+    "path2ban_warn_user_message": "Access to this page is restricted.<br/>If you continue to attempt to access it you will be blocked from this website.",
+    "path2ban_banned_count": 0,
+    "path2ban_banned_since": 0,
+    "path2ban_mode": 1
+}

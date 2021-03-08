@@ -1,0 +1,79 @@
+<?php
+
+/**
+ * @file
+ * path2ban module.
+ */
+
+module_load_include('inc', 'path2ban', 'includes/menu');
+module_load_include('inc', 'path2ban', 'includes/settings');
+
+/**
+ * Implements hook_permission().
+ */
+function path2ban_permission() {
+  $permissions = array();
+  $permissions['administer path2ban'] = array(
+    'title' => t('Administer path2ban'),
+    'description' => t('Administer path2ban configuration settings.'),
+  );
+  $permissions['bypass path2ban'] = array(
+    'title' => t('Bypass path2ban'),
+    'description' => t('path2ban will not block this role.'),
+  );
+  return $permissions;
+}
+
+/**
+ * Implements hook_mail().
+ */
+function path2ban_mail($key, &$message, $params) {
+  $message['subject'] = $params['subject'];
+  $message['body'] = $params['body'];
+}
+
+/**
+ * Implements hook_boot().
+ *
+ * In this module's current implementation too many Drupal libraries are needed
+ * for a lower order hook to be used.
+
+function path2ban_boot(&$page) {
+  $mode = config_get('path2ban.settings', 'path2ban_mode') ?: 0;
+  if (Path2ban_SettingsManager::MODE_USE_HOOK != $mode) {
+    return;
+  }
+
+  Path2ban::destinationCheck();
+  // No redirect needed, as it should just proceed to the 404 page.
+}
+
+/**
+ * Implements hook_requirements.
+ */
+function path2ban_requirements($phase) {
+  if ('runtime' == $phase) {
+    return Path2ban_SettingsManager::checkRuntimeRequirements();
+  }
+}
+
+/**
+ * Implements hook_config_info.
+ */
+function path2ban_config_info() {
+  $prefixes['path2ban.settings'] = array(
+    'label' => t('Path 2 ban'),
+    'group' => t('Configuration'),
+  );
+  return $prefixes;
+}
+
+/**
+ * Implements hook_autoload_info.
+ */
+function path2ban_autoload_info() {
+  return array(
+    'Path2ban' => 'src/Path2ban.php',
+    'Path2ban_SettingsManager' => 'src//Path2ban/SettingsManager.php',
+  );
+}
